@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visa_app/ui/application.dart';
 import 'package:visa_app/ui/home.dart';
 
 void main() {
@@ -11,9 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      home: HomePage(),
+      home: MyFormPage(),
        routes: {
         // '/login': (context) => LoginScreen(),
         // '/home': (context) => HomePage(),

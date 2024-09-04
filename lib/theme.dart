@@ -35,8 +35,8 @@ class Themes {
 TextStyle get subHeadingStyle {
   return GoogleFonts.poppins(
       textStyle: const TextStyle(
-    color: darkGrayClr,
-    fontSize: 24,
+    color: darkHeadClr,
+    fontSize: 14,
     fontWeight: FontWeight.bold,
   ));
 }
@@ -47,5 +47,32 @@ TextStyle get headingStyle {
     color: darkGrayClr,
     fontSize: 25,
     fontWeight: FontWeight.bold,
+  ));
+}
+
+TextStyle get appbarStyle {
+  return GoogleFonts.poppins(
+      textStyle: const TextStyle(
+    color: Colors.white,
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+  ));
+}
+
+TextStyle get hintStyle {
+  return GoogleFonts.poppins(
+      textStyle: const TextStyle(
+    color: darkHeadClr,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  ));
+}
+
+TextStyle get nextButtonStyle {
+  return GoogleFonts.poppins(
+      textStyle: const TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
   ));
 }
