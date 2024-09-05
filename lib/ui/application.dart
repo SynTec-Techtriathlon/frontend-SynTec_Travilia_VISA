@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:visa_app/services/service.dart';
 import 'package:visa_app/theme.dart';
+import 'package:visa_app/ui/home.dart';
+import 'package:visa_app/ui/result.dart';
 import 'package:visa_app/widget/datepicker.dart';
 import 'package:visa_app/widget/textfield.dart';
 
@@ -44,6 +49,10 @@ class _MyFormPageState extends State<MyFormPage>
   final TextEditingController _travelModeController = TextEditingController();
   final TextEditingController _moneyAmountController = TextEditingController();
   final TextEditingController _moneyTypeController = TextEditingController();
+  final ApplicantService _applicantService = ApplicantService();
+
+  bool _isSubmitting = false;
+  String _statusMessage = '';
 
   late TabController _tabController;
   int _currentStep = 0;
@@ -72,34 +81,136 @@ class _MyFormPageState extends State<MyFormPage>
     }
   }
 
+  void _showSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: const Text('Yay! A SnackBar!'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          // Some code to undo the change.
+        },
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _submitForm() async {
+    Map<String, dynamic> data = {
+      "applicant": {
+        "nic": _nicController.text,
+        "nationality": _nationalityController.text,
+        "fullName": _fullNameController.text,
+        "gender": _genderController.text,
+        "birthDate": _dobController.text,
+        "birthPlace": _placeOfBirthController.text,
+        "height": int.tryParse(_heightController.text) ?? 0,
+        "address": _addressController.text,
+        "telNo": _telephoneController.text,
+        "email": _emailController.text,
+        "occupation": _occupationController.text,
+        "occupationAddress": _occupationAddressController.text,
+      },
+      "application": {
+        "purpose": _purposeController.text,
+        "route": _routeController.text,
+        "travelMode": _travelModeController.text,
+        "arrivalDate": _arrivalDateController.text,
+        "period": 90,
+        "amountOfMoney": int.tryParse(_moneyAmountController.text) ?? 0,
+        "moneyType": _moneyTypeController.text,
+      },
+      "passport": {
+        "id": _passportNoController.text,
+        "dateOfExpire": _dateOfExpiryController.text,
+        "dateOfIssue": _dateOfIssueController.text,
+      },
+      "spouse": {
+        "spouseNIC": "987654321V",
+        "name": "Jane Doe",
+        "address": "123 Main Street",
+      },
+      "history": [
+        {
+          "visaType": _visaTypeController.text,
+          "visaIssuedDate": _visaIssuedDateController.text,
+          "visaValidityPeriod": int.tryParse(_visaValidityController.text) ?? 0,
+          "dateLeaving": _leavingDateController.text,
+          "lastLocation": _lastLocationController.text,
+        }
+      ],
+    };
+
+    try {
+      await _applicantService.postApplicantData(data);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultPage(
+              result: 'Success', message: 'Data submitted successfully!'),
+        ),
+      );
+    } catch (e) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultPage(
+              result: 'Failure', message: 'Failed to submit data: $e'),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isSubmitting = false;
+        _statusMessage = '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Visa Application Form', style: appbarStyle),
-          backgroundColor: primaryClr,
-        ),
-        body: Column(
-          children: [
-            _buildTimeline(),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildPassportDetailsTab(),
-                  _buildPersonalDetailsTab(),
-                  _buildContactDetailsTab(),
-                  _buildVisaDetailsTab(),
-                ],
+          length: 3,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text('Visa Application Form', style: appbarStyle),
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: primaryClr,
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
+                },
               ),
             ),
-          ],
-        ),
-      ),
-    ));
+            body: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ), // Extra space before the timeline (optional
+
+                _buildTimeline(),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildPassportDetailsTab(),
+                      _buildPersonalDetailsTab(),
+                      _buildContactDetailsTab(),
+                      _buildVisaDetailsTab(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget _buildTimeline() {
@@ -126,7 +237,7 @@ class _MyFormPageState extends State<MyFormPage>
       children: [
         CircleAvatar(
           radius: 16,
-          backgroundColor: isCompleted ? primaryClr : Colors.grey,
+          backgroundColor: isCompleted ? Colors.orange : Colors.grey,
           child: Icon(
             size: 22,
             isCompleted ? Icons.check : Icons.circle,
@@ -146,7 +257,7 @@ class _MyFormPageState extends State<MyFormPage>
     return Expanded(
       child: Divider(
         thickness: 2,
-        color: _currentStep > 0 ? Colors.blue : Colors.grey,
+        color: _currentStep > 0 ? primaryClr : Colors.grey,
       ),
     );
   }
@@ -265,16 +376,14 @@ class _MyFormPageState extends State<MyFormPage>
                 ElevatedButton(
                   onPressed: _nextTab,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.blue, // Assuming 'primaryClr' is blue
+                    backgroundColor: primaryClr,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                       side: BorderSide.none,
                     ),
                   ),
-                  child:
-                      const Text("Next", style: TextStyle(color: Colors.white)),
+                  child: Text("Next", style: nextButtonStyle),
                 ),
               ],
             ),
@@ -329,15 +438,14 @@ class _MyFormPageState extends State<MyFormPage>
               ElevatedButton(
                 onPressed: _nextTab,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Assuming 'primaryClr' is blue
+                  backgroundColor: primaryClr,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                     side: BorderSide.none,
                   ),
                 ),
-                child:
-                    const Text("Next", style: TextStyle(color: Colors.white)),
+                child: Text("Next", style: nextButtonStyle),
               ),
             ],
           ),
@@ -429,18 +537,33 @@ class _MyFormPageState extends State<MyFormPage>
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 48),
-                    backgroundColor: primaryClr,
+                    backgroundColor: _isSubmitting
+                        ? Colors.grey
+                        : primaryClr, // Change color when submitting
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                       side: BorderSide.none,
                     ),
                   ),
-                  onPressed: () {
-                    // Add submission logic here
-                    print("Form submitted");
-                  },
-                  child: Text("Submit", style: nextButtonStyle),
+                  onPressed: _isSubmitting
+                      ? null
+                      : () {
+                          _submitForm();
+                        },
+                  child: _isSubmitting
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                            SizedBox(width: 16),
+                            Text("Sending...", style: nextButtonStyle),
+                          ],
+                        )
+                      : Text("Submit", style: nextButtonStyle),
                 ),
               ],
             ),

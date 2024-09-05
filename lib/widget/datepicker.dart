@@ -7,7 +7,8 @@ class CustomDatePicker extends StatefulWidget {
   final TextEditingController controller;
   final String placeholder;
 
-  const CustomDatePicker({super.key, required this.controller, required this.placeholder});
+  const CustomDatePicker(
+      {super.key, required this.controller, required this.placeholder});
 
   @override
   _CustomDatePickerState createState() => _CustomDatePickerState();
@@ -19,6 +20,21 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
     return GestureDetector(
       onTap: () async {
         DateTime? pickedDate = await showDatePicker(
+          barrierColor: primaryClr,
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: Colors
+                    .orange, // Header background color // Selected date color
+                colorScheme: ColorScheme.light(
+                    primary: Colors.orange), // OK/Cancel button color
+                buttonTheme: ButtonThemeData(
+                  textTheme: ButtonTextTheme.primary, // Button text color
+                ),
+              ),
+              child: child!,
+            );
+          },
           context: context,
           initialDate: DateTime.now(),
           firstDate: DateTime(1900),

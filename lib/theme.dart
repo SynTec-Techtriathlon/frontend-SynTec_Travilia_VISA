@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color blueClr = Color(0xff0E99FF);
+const Color blueClr = Colors.black;
 const Color yellowClr = Color(0xffffb746);
 const Color pinkClr = Color(0xFFff4667);
 const Color darkGrayClr = Color(0xff121212);
 const Color darkHeadClr = Color(0xff424242);
-const Color borderClr = Color(0xff757272);
+const Color borderClr = Color(0xff757272); //#
 const Color surfaceClr = Colors.grey;
-Color onSurfaceClr = Colors.white;
+Color onSurfaceClr = Color(0xffF8FBF8);
 const primaryClr = blueClr;
 
 class Themes {
@@ -48,10 +48,28 @@ TextStyle get headingStyle {
   ));
 }
 
+TextStyle get mainheadingStyle {
+  return GoogleFonts.poppins(
+      textStyle: const TextStyle(
+    color: darkGrayClr,
+    fontSize: 40,
+    fontWeight: FontWeight.bold,
+  ));
+}
+
+TextStyle get mainButtonStyle {
+  return GoogleFonts.poppins(
+      textStyle: const TextStyle(
+    fontSize: 22,
+    color: Colors.orange,
+    fontWeight: FontWeight.bold,
+  ));
+}
+
 TextStyle get appbarStyle {
   return GoogleFonts.poppins(
       textStyle: const TextStyle(
-    color: Colors.white,
+    color: primaryClr,
     fontSize: 24,
     fontWeight: FontWeight.w500,
   ));
@@ -69,8 +87,8 @@ TextStyle get hintStyle {
 TextStyle get nextButtonStyle {
   return GoogleFonts.poppins(
       textStyle: const TextStyle(
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
+    color: Colors.orange,
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
   ));
 }

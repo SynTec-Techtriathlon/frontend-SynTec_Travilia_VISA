@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:visa_app/theme.dart';
+import 'package:visa_app/ui/application.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,30 +15,48 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Demo Home Page'),
-      ),
-      body: Center(
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        alignment: Alignment.center,
+        color: onSurfaceClr,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Visa Application',
+              style: mainheadingStyle,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
             SizedBox(
-              width: 200,
-              child: Image.asset('images/Emblem_of_Sri_Lanka.png'),
+              width: 400,
+              child: Image.asset('assets/images/travel.png'),
             ),
             const SizedBox(
               height: 50,
             ),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyFormPage()),
+                );
+              },
               color: Colors.black,
-              height: 50,
-              elevation: 5.0,
-              child: const Text(
-                'Apply Now',
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.orange,
+              height: 60,
+              minWidth: 300,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide.none,
+              ),
+              child: Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                child: Text(
+                  'Apply Now',
+                  style: mainButtonStyle,
                 ),
               ),
             ),
