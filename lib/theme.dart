@@ -21,8 +21,6 @@ class Themes {
       onSecondary: Colors.black,
       error: pinkClr,
       onError: onSurfaceClr,
-      background: Colors.white,
-      onBackground: onSurfaceClr,
       surface: surfaceClr,
       onSurface: onSurfaceClr,
     ),

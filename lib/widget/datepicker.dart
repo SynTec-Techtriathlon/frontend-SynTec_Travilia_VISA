@@ -7,7 +7,7 @@ class CustomDatePicker extends StatefulWidget {
   final TextEditingController controller;
   final String placeholder;
 
-  CustomDatePicker({required this.controller, required this.placeholder});
+  const CustomDatePicker({super.key, required this.controller, required this.placeholder});
 
   @override
   _CustomDatePickerState createState() => _CustomDatePickerState();
@@ -57,7 +57,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
             fillColor: const Color.fromRGBO(255, 255, 255, 0.702),
             labelText: widget.placeholder,
             labelStyle: hintStyle,
-            suffixIcon: Icon(Icons.calendar_today),
+            suffixIcon: const Icon(Icons.calendar_today),
           ),
         ),
       ),

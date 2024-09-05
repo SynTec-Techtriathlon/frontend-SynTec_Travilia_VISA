@@ -4,7 +4,7 @@ import 'package:visa_app/widget/datepicker.dart';
 import 'package:visa_app/widget/textfield.dart';
 
 class MyFormPage extends StatefulWidget {
-  MyFormPage({super.key});
+  const MyFormPage({super.key});
 
   @override
   _MyFormPageState createState() => _MyFormPageState();
@@ -310,7 +310,7 @@ class _MyFormPageState extends State<MyFormPage>
             placeholder: 'Occupation Address',
             controller: _occupationAddressController,
           ),
-          Spacer(),
+          const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
