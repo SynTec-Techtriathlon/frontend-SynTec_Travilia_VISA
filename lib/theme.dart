@@ -39,6 +39,15 @@ TextStyle get subHeadingStyle {
   ));
 }
 
+TextStyle get lableStyle {
+  return GoogleFonts.poppins(
+      textStyle: const TextStyle(
+    color: darkHeadClr,
+    fontSize: 22,
+    fontWeight: FontWeight.w500,
+  ));
+}
+
 TextStyle get headingStyle {
   return GoogleFonts.poppins(
       textStyle: const TextStyle(
